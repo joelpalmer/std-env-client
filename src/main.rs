@@ -2,8 +2,10 @@ use std::env;
 
 fn main() {
     println!("Inspecting the processes's environment...");
-    println!("Here are the constants associated with the current target:");
+    println!("Here are the Constants associated with the current target:");
     print_constants();
+    println!("Here are the functions in action:");
+    call_functions();
 }
 
 fn print_constants() {
@@ -45,4 +47,41 @@ fn print_constants() {
 
     let operating_system = env::consts::OS;
     println!("Specific Operating system in use: {}", operating_system);
+}
+
+fn call_functions() {
+    // args() -> Args - use args_os() for non-unicode
+    println!("args():");
+    for arg in env::args() {
+        println!("Arg: {}", arg)
+    }
+
+    // args_os() -> ArgsOs - use args_os() for non-unicode
+    println!("args_os():");
+    for arg in env::args_os() {
+        println!("Arg (OS): {:?}", arg)
+    }
+
+    // current_dir() -> Result<PathBuf>
+    println!("current_dir():");
+    let path = env::current_dir();
+    match path {
+        Ok(val) => println!("Current Directory is: {:?}", val),
+        Err(e) => println!("Current Directory value is invalid: {}", e),
+    }
+
+    // var<K: AsRef<OsStr>>(key: K) -> Result<String, VarError>
+    println!("var():");
+    let key = "HOME";
+    match env::var(key) {
+        Ok(val) => println!("The key {} has a value of {:?}", key, val),
+        Err(e) => println!("couldn't interpret {}: {}", key, e),
+    }
+
+    // current_exe() -> Result<PathBuf>
+    println!("current_exe():");
+    match env::current_exe() {
+        Ok(exe_path) => println!("The path to the current exe is {:?}", exe_path),
+        Err(e) => println!("Failed to get current exe path: {}", e),
+    }
 }
